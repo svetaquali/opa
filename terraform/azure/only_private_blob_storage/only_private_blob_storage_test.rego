@@ -1,4 +1,4 @@
-package torque
+package torque.terraform_plan
 
 test_allow_private_blob_storages {
   result:= deny with input as data.plan_mock

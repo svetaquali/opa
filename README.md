@@ -67,7 +67,7 @@ $ opa eval --format pretty --data {PATH_TO_REGO_FILE} --input {PATH_TO_INPUT_JSO
 
 - `PATH_TO_REGO_FILE`: Path to the policy rego file
 - `PATH_TO_INPUT_JSON_FILE`: Path to the 'input' json file
-- `PATH_TO_QUERY`: The query against the policy data and the 'input', should start with `data`. For example, the query `data.torque` - will evaluate all the rules defined in the package called *'torque'*.
+- `PATH_TO_QUERY`: The query against the policy data and the 'input', should start with `data`. For example, the query `data.torque` - will evaluate all the rules defined in the package called *'torque.terraform_plan'*.
 
 - In order to overload the policy data as part of the evaluation, per every json file add "`--data `" and then the required file path.
 

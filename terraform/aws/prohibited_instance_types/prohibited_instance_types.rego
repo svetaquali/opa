@@ -1,4 +1,4 @@
-package torque
+package torque.terraform_plan
 
 import input as tfplan
 

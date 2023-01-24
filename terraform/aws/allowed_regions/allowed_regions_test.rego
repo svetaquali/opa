@@ -1,4 +1,4 @@
-package torque
+package torque.terraform_plan
 
 test_allow_regions {
   result:= deny 
