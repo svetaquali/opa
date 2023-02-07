@@ -1,5 +1,7 @@
 package torque.environment
 
+import future.keywords.if
+
 result = { "decision": "Denied", "reason": "sandbox duration exceeds max duration" } if {
     data.max_duration_minutes < input.duration_minutes
 }
