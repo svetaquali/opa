@@ -148,8 +148,13 @@ get_timespan_string(max_duration_ns) = timespan {
 # In this example we allow the environment to be up to 5 hours total. Anything more than 5 hours would be automatically denied.
 # Duration which is between 2 and 5 hours would need manual approval,
 # and below 2 hours would be automatically approved without manual intervention.
-result := { "decision": "Denied", "reason": "sandbox must have duration" } if {
-    not contains(input, "duration")
+result := { "decision": "Denied", "reason": "environment must have duration" } if {
+    not input.duration_minutes
+}
+
+result := { "decision": "Denied", "reason": "environment duration must be a number" } if {
+    input.duration_minutes
+    not is_number(input.duration_minutes)
 }
 
 result := {"decision": "Denied", "reason": "Max duration and duration for manual have to be numbers."} if {
@@ -169,19 +174,22 @@ result := {"decision": "Denied", "reason": "Max duration and duration for manual
 }
 
 result = {"decision": "Denied", "reason": concat("", ["environment duration exceeds max duration in ", timespan, ""])} if {
-	is_number(data.max_duration_minutes)
+	is_number(input.duration_minutes)
+    is_number(data.max_duration_minutes)
 	data.max_duration_minutes < input.duration_minutes
     timespan := get_timespan_string(data.max_duration_minutes * 60000000000)
 }
 
 result = {"decision": "Denied", "reason": concat("", ["environment duration exceeds max duration in ", timespan, ""])} if {
-	is_number(data.env_max_duration_minutes)
+	is_number(input.duration_minutes)
+    is_number(data.env_max_duration_minutes)
 	not data.max_duration_minutes
 	data.env_max_duration_minutes < input.duration_minutes
 	timespan := get_timespan_string(data.env_max_duration_minutes * 60000000000)
 }
 
 result = {"decision": "Manual", "reason": "environment duration requires approval"} if {
+	is_number(input.duration_minutes)
 	is_number(data.max_duration_minutes)
 	is_number(data.duration_for_manual_minutes)
 	data.max_duration_minutes > input.duration_minutes
@@ -189,6 +197,7 @@ result = {"decision": "Manual", "reason": "environment duration requires approva
 }
 
 result = {"decision": "Manual", "reason": "environment duration requires approval"} if {
+	is_number(input.duration_minutes)
 	is_number(data.env_max_duration_minutes)
 	not data.max_duration_minutes
 	is_number(data.env_duration_for_manual_approval_minutes)
@@ -198,12 +207,16 @@ result = {"decision": "Manual", "reason": "environment duration requires approva
 }
 
 result = {"decision": "Approved"} if {
+	is_number(input.duration_minutes)
+    is_number(data.max_duration_minutes)
 	is_number(data.duration_for_manual_minutes)
     data.duration_for_manual_minutes < data.max_duration_minutes
 	data.duration_for_manual_minutes > input.duration_minutes
 }
 
 result = {"decision": "Approved"} if {
+	is_number(input.duration_minutes)
+    is_number(data.env_max_duration_minutes)
 	is_number(data.env_duration_for_manual_approval_minutes)
 	not data.duration_for_manual_minutes
     data.env_duration_for_manual_approval_minutes < data.env_max_duration_minutes
