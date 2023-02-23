@@ -57,48 +57,6 @@ get_timespan_string(max_duration_ns) = timespan {
 }
 
 get_timespan_string(max_duration_ns) = timespan {
-    days_str = days(max_duration_ns)
-	not hours(max_duration_ns)
-    not minutes(max_duration_ns)
-	timespan := concat(" ", [days_str])
-}
-
-get_timespan_string(max_duration_ns) = timespan {
-    hours_str = hours(max_duration_ns)
-	not days(max_duration_ns)
-    not minutes(max_duration_ns)
-	timespan := concat(" ", [hours_str])
-}
-
-get_timespan_string(max_duration_ns) = timespan {
-    minutes_str = minutes(max_duration_ns)
-	not days(max_duration_ns)
-    not hours(max_duration_ns)
-	timespan := concat(" ", [minutes_str])
-}
-
-get_timespan_string(max_duration_ns) = timespan {
-	days_str = days(max_duration_ns)
-	minutes_str = minutes(max_duration_ns)
-    not hours(max_duration_ns)
-	timespan := concat(" ", [days_str, minutes_str])
-}
-
-get_timespan_string(max_duration_ns) = timespan {
-	days_str = days(max_duration_ns)
-	hours_str = hours(max_duration_ns)
-    not minutes(max_duration_ns)
-	timespan := concat(" ", [days_str, hours_str])
-}
-
-get_timespan_string(max_duration_ns) = timespan {
-	hours_str = hours(max_duration_ns)
-	minutes_str = minutes(max_duration_ns)
-    not days(max_duration_ns)
-	timespan := concat(" ", [hours_str, minutes_str])
-}
-
-get_timespan_string(max_duration_ns) = timespan {
 	days_str = days(max_duration_ns)
     not hours(max_duration_ns)
     not minutes(max_duration_ns)
@@ -128,12 +86,6 @@ get_timespan_string(max_duration_ns) = timespan {
 #
 # An example of a data object for this policy looks like this:
 # {
-#   "max_duration_minutes": 300,
-#   "duration_for_manual_minutes": 120
-# }
-#
-# An example with the new variable names
-# {
 #   "env_max_duration_minutes": 300,
 #   "env_duration_for_manual_approval_minutes": 120
 # }
@@ -145,73 +97,29 @@ result := { "decision": "Denied", "reason": "environment must have duration" } i
     not input.duration_minutes
 }
 
-result := { "decision": "Denied", "reason": "environment duration must be a number" } if {
-    input.duration_minutes
-    not is_number(input.duration_minutes)
-}
-
-result := {"decision": "Denied", "reason": "Max duration and duration for manual have to be numbers."} if {
-	data.max_duration_minutes
-	not is_number(data.max_duration_minutes)
-	data.duration_for_manual_minutes
-	not is_number(data.duration_for_manual_minutes)
-}
-
 result := {"decision": "Denied", "reason": "Max duration and duration for manual have to be numbers."} if {
 	data.env_max_duration_minutes
-	not data.max_duration_minutes
 	not is_number(data.env_max_duration_minutes)
 	data.env_duration_for_manual_approval_minutes
-	not data.duration_for_manual_minutes
 	not is_number(data.env_duration_for_manual_approval_minutes)
 }
 
 result = {"decision": "Denied", "reason": concat("", ["environment duration exceeds max duration in ", timespan, ""])} if {
-	is_number(input.duration_minutes)
-    is_number(data.max_duration_minutes)
-	data.max_duration_minutes < input.duration_minutes
-    timespan := get_timespan_string(data.max_duration_minutes * 60000000000)
-}
-
-result = {"decision": "Denied", "reason": concat("", ["environment duration exceeds max duration in ", timespan, ""])} if {
-	is_number(input.duration_minutes)
     is_number(data.env_max_duration_minutes)
-	not data.max_duration_minutes
 	data.env_max_duration_minutes < input.duration_minutes
 	timespan := get_timespan_string(data.env_max_duration_minutes * 60000000000)
 }
 
 result = {"decision": "Manual", "reason": "environment duration requires approval"} if {
-	is_number(input.duration_minutes)
-	is_number(data.max_duration_minutes)
-	is_number(data.duration_for_manual_minutes)
-	data.max_duration_minutes > input.duration_minutes
-	data.duration_for_manual_minutes < input.duration_minutes
-}
-
-result = {"decision": "Manual", "reason": "environment duration requires approval"} if {
-	is_number(input.duration_minutes)
 	is_number(data.env_max_duration_minutes)
-	not data.max_duration_minutes
 	is_number(data.env_duration_for_manual_approval_minutes)
-	not data.duration_for_manual_minutes
 	data.env_max_duration_minutes > input.duration_minutes
 	data.env_duration_for_manual_approval_minutes < input.duration_minutes
 }
 
 result = {"decision": "Approved"} if {
-	is_number(input.duration_minutes)
-    is_number(data.max_duration_minutes)
-	is_number(data.duration_for_manual_minutes)
-    data.duration_for_manual_minutes < data.max_duration_minutes
-	data.duration_for_manual_minutes > input.duration_minutes
-}
-
-result = {"decision": "Approved"} if {
-	is_number(input.duration_minutes)
     is_number(data.env_max_duration_minutes)
 	is_number(data.env_duration_for_manual_approval_minutes)
-	not data.duration_for_manual_minutes
     data.env_duration_for_manual_approval_minutes < data.env_max_duration_minutes
 	data.env_duration_for_manual_approval_minutes > input.duration_minutes
 }
