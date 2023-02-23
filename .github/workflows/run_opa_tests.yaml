@@ -14,7 +14,7 @@ jobs:
     - name: Setup OPA
       uses: open-policy-agent/setup-opa@v2
       with:
-        version: 0.40.0
+        version: 0.47.0
         
     - name: Grant execute permission for run OPA tests script
       run: chmod +x .github/scripts/run_opa_tests.sh

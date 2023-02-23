@@ -1,4 +1,4 @@
-package torque
+package torque.terraform_plan
 
 # -- S3 bucket acl declaration as part of the bucket resouce definiton
 

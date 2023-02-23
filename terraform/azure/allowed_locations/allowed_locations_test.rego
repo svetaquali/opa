@@ -1,4 +1,4 @@
-package torque
+package torque.terraform_plan
 
 test_allowed_locations {
   reason:= deny 
