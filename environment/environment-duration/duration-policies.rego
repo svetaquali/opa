@@ -38,13 +38,6 @@ get_timespan_string(max_duration_ns) = timespan {
 get_timespan_string(max_duration_ns) = timespan {
     days_str = days(max_duration_ns)
 	hours_str = hours(max_duration_ns)
-    minutes_str = minutes(max_duration_ns)
-	timespan := concat(" ", [days_str, hours_str, minutes_str])
-}
-
-get_timespan_string(max_duration_ns) = timespan {
-    days_str = days(max_duration_ns)
-	hours_str = hours(max_duration_ns)
     not minutes(max_duration_ns)
 	timespan := concat(" ", [days_str, hours_str])
 }
