@@ -148,6 +148,10 @@ get_timespan_string(max_duration_ns) = timespan {
 # In this example we allow the environment to be up to 5 hours total. Anything more than 5 hours would be automatically denied.
 # Duration which is between 2 and 5 hours would need manual approval,
 # and below 2 hours would be automatically approved without manual intervention.
+result := { "decision": "Denied", "reason": "sandbox must have duration" } if {
+    not contains(input, "duration")
+}
+
 result := {"decision": "Denied", "reason": "Max duration and duration for manual have to be numbers."} if {
 	data.max_duration_minutes
 	not is_number(data.max_duration_minutes)
