@@ -7,7 +7,7 @@ test_max_duration_denied_new_data_names {
                           with data.env_max_duration_minutes as 300
                           with data.env_duration_for_manual_approval_minutes as 120
     value.decision == "Denied"
-    value.reason == "environment duration exceeds max duration in 5 hours"
+    value.reason == "environment duration exceeds max duration in 50 minutes"
 }
 
 test_max_duration_manual_new_data_names {
