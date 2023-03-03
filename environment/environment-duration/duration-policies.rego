@@ -77,7 +77,7 @@ get_timespan_string(max_duration_ns) = timespan {
 	timespan := concat(" ", [minutes_str])
 }
 
-
+# testing
 # This policy enforces a maximal duration on environments launched from it.
 # It takes two numbers as arguments (in the data object):
 #   1. env_max_duration_minutes : the total number of minutes the environments are allowed to run (including extentions)
